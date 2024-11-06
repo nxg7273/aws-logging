@@ -9,7 +9,7 @@ data:
         Name cloudwatch
         Match *
         region us-east-1
-        log_group_name /aws/eks/protein-engineering-cluster-new/test-app
+        log_group_name /aws/eks/protein-engineering-cluster-new/application-logs
         log_stream_prefix fargate-
         auto_create_group true
         log_key log
@@ -24,7 +24,7 @@ data:
     [FILTER]
         Name grep
         Match *
-        Regex kubernetes.namespace_name test-app
+        Regex kubernetes.namespace_name (logging|test-app)
 
     [FILTER]
         Name grep
