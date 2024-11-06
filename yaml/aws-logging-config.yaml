@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-logging
+  namespace: aws-observability
+data:
+  output.conf: |
+    [OUTPUT]
+        Name cloudwatch
+        Match *
+        region us-east-1
+        log_group_name /aws/eks/protein-engineering-cluster-new/test-app
+        log_stream_prefix fargate-
+        auto_create_group true
+        log_key log
+  parsers.conf: |
+    [PARSER]
+        Name cri
+        Format regex
+        Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<message>.*)$
+        Time_Key time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+  filters.conf: |
+    [FILTER]
+        Name grep
+        Match *
+        Regex log (ERROR|FATAL|EXCEPTION|FAIL)

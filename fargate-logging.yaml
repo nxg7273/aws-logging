@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aws-observability
+  labels:
+    aws-observability: enabled
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-logging
+  namespace: aws-observability
+data:
+  flb_log_cw: "true"  # Enable Fluent Bit CloudWatch logging
+  filters.conf: |
+    [FILTER]
+        Name             kubernetes
+        Match            *
+        Merge_Log       On
+        Keep_Log        On
+        K8S-Logging.Parser On
+        K8S-Logging.Exclude On
+
+    [FILTER]
+        Name            grep
+        Match           *
+        Regex          kubernetes.namespace_name ^(test-app|logging)$
+
+    [FILTER]
+        Name           grep
+        Match          *
+        Regex         log (ERROR|FATAL|EXCEPTION|FAIL)
+  output.conf: |
+    [OUTPUT]
+        Name cloudwatch
+        Match *
+        region us-east-1
+        log_group_name /aws/eks/protein-engineering-cluster-new/application-logs
+        log_stream_prefix fargate-
+        auto_create_group true
+        retry_limit 2

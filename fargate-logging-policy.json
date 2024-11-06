@@ -1,0 +1,19 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:CreateLogGroup",
+                "logs:DescribeLogStreams",
+                "logs:PutLogEvents",
+                "logs:PutRetentionPolicy"
+            ],
+            "Resource": [
+                "arn:aws:logs:us-east-1:938398057556:log-group:/aws/eks/protein-engineering-cluster-new/*:*",
+                "arn:aws:logs:us-east-1:938398057556:log-group:/aws/eks/protein-engineering-cluster-new/*:log-stream:*"
+            ]
+        }
+    ]
+}
